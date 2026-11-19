@@ -1,0 +1,312 @@
+@charset "UTF-8";
+
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+/*ホバー時の動きを滑らかにする*/
+input[type="submit"],
+input[type="reset"],
+.todo-table td:nth-child(7) img,
+.export-box p{
+	transition: all 0.3s ease;
+}
+body{
+	font-size: 1.0rem;
+	font-family: "Zen Maru Gothic", sans-serif;
+	background-color: rgb(185, 221, 187);
+	color: #333;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* 全体の最大幅を揃えるコンテナ */
+.todo-container{
+	width: 100%;
+/*	タブレットサイズ*/
+	max-width: 768px;
+}
+/* カード共通のスタイル（角丸と枠線 */
+.card-box{
+	background-color: rgb(210, 255, 210);
+	border: 2px solid #3b7a3e;
+	border-radius: 12px;
+	overflow: hidden;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+/* カードのヘッダー部分（タイトル帯） */
+.card-header{
+	background-color: #3b7a3e;
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px;
+    font-size: 1.25rem;
+}
+.card-header span{
+	font-size: 0.875rem;
+	font-weight: normal;
+	margin-left: 16px;
+}
+/* カードの中身（フォームやテーブルの余白） */
+.card-body{
+	padding: 10px 15px;
+}
+/* フォーム内の行レイアウト */
+.form-row{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 12px;
+}
+.form-row label {
+    width: 80px;
+    font-weight: bold;
+}
+/* 入力欄（テキスト・日付）のスタイル */
+input[type="text"],
+input[type="date"] {
+    padding: 6px 10px;
+    border: 1px solid #a3b899;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+input[type="text"]{
+	flex: 1;
+}
+input[type="date"]{
+	margin-left: 22px;
+	width: 180px;
+}
+/* ボタンのデザイン */
+input[type="submit"],
+input[type="reset"] {
+	margin-left: 10px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ffffff;
+	background-color: #3b7a3e;
+}
+input[type="reset"]{
+	background-color: #8c9e5e;
+}
+input[type="submit"]:hover,
+input[type="reset"]:hover{
+    opacity: 0.7;
+	transform: scale(1.05);
+}
+/*ボタン位置の調整*/
+.flex-row{
+	display: flex;
+	justify-content: space-between;
+}
+.flex-row label{
+	width: 80px;
+}
+/*抽出ボタン*/
+.filter,
+.sort{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 50%;
+	background-color: rgb(181, 231, 255);
+	padding: 10px 5px;
+	border-radius: 10px;
+	font-weight: bold;
+	font-size: 0.75rem;
+	margin-right: 5px;
+	height: 50px;
+}
+.filter label,
+.sort label{
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	cursor: pointer;
+}
+.filter > :nth-child(1){
+	background-color: rgb(0, 109, 162);
+	margin-right: 10px;
+}
+/*並び替えボタン*/
+.sort{
+	background-color: rgb(226, 198, 255);
+	margin-right: 0;
+	width: 50%;
+}
+.sort > :nth-child(1){
+	background-color: rgb(120, 0, 240);
+	margin-right: 10px;
+}
+/*件数表示*/
+.count-display{
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	font-weight: bold;
+}
+.count-display > p{
+	background-color: rgb(181, 231, 255);
+	padding: 5px 8px;
+	border-radius: 10px;
+}
+.count-display > :nth-child(1){
+	justify-self: start;
+}
+.count-display > :nth-child(2){
+	background-color: rgb(232, 241, 224);
+	border-bottom: 2px solid rgb(176, 206, 149);
+	border-right: 2px solid rgb(176, 206, 149);
+}
+/*出力ボタン*/
+.export-box{
+	justify-self: end;
+	display: flex;
+	gap: 15px;
+	align-items: center;
+}
+.export-box p{
+	background-color: #333;
+	border: 2px solid #888;
+	border-radius: 0;
+	padding: 3px 8px 5px 10px;
+}
+.export-box p span{
+	font-size: 0.875rem;
+	
+}
+.export-box a{
+	text-decoration: none;
+	color: #FFF;
+}
+.export-box p:hover{
+	opacity: 0.8;
+	transform: scale(1.05);
+}
+/*テーブルのスタイル*/
+.todo-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px auto;
+	/* 列幅を固定して崩れを防ぐ */
+	table-layout: fixed;
+}
+.todo-table th,
+.todo-table td {
+    padding: 5px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgb(210, 227, 196);
+}
+.todo-table th {
+    background-color: rgb(210, 227, 196);
+    font-weight: bold;
+}
+.todo-table tr:last-child td{
+    border-bottom: none;
+}
+/*列幅調整*/
+.todo-table th:nth-child(1),
+.todo-table td:nth-child(1){
+	width: 8%;
+}
+.todo-table th:nth-child(2),
+.todo-table td:nth-child(2){
+	width: 12%;
+}
+.todo-table th:nth-child(3),
+.todo-table td:nth-child(3){
+	width: 45%;
+}
+.todo-table th:nth-child(4),
+.todo-table td:nth-child(4){
+	width: 14%;
+}
+.todo-table th:nth-child(5),
+.todo-table td:nth-child(5){
+	width: 11%;
+}
+.todo-table th:nth-child(6),
+.todo-table td:nth-child(6){
+	width: 5%;
+}
+.todo-table th:nth-child(7),
+.todo-table td:nth-child(7){
+	width: 5%;
+}
+.todo-table small{
+	font-size: 0.625rem;
+}
+/*開始位置や文字の太さをを調整*/
+.todo-table th:nth-child(1),
+.todo-table td:nth-child(1),
+.todo-table td:nth-child(5),
+.todo-table th:nth-child(6),
+.todo-table td:nth-child(6){
+	text-align: center;
+}
+.todo-table td:nth-child(3),
+.todo-table td:nth-child(4){
+	font-weight: bold;
+}
+/*期限前かどうか色分け*/
+.limit{
+	font-size: 0.75rem;
+	font-weight: bold;
+	border-radius: 10px;
+	padding: 3px 6px;
+	background-color: rgb(0, 128, 192);
+	color: #ffffff;
+}
+.limit-now{
+	background-color: rgb(255, 128, 0);
+}
+.limit-over{
+	background-color: rgb(255, 0, 128);
+}
+/*チェックボタンの装飾*/
+.todo-table th:nth-child(6){
+	font-size: 20px;
+}
+.todo-table input[type="submit"]{
+	margin-left: 1.5px;
+	width: 24px;
+	height: 24px;
+    border: 3px solid rgb(0, 196, 98);
+    border-radius: 5px;
+    font-weight: bold;
+	font-size: 14px;
+    cursor: pointer;
+    color: #333;
+	background-color: rgb(255, 255, 255);
+	display: block;
+	align-items: center;
+    justify-content: center;
+	padding: 0;
+}
+/* テキストの打ち消し線と透過処理 */
+.todo-table tr.is-completed td:nth-child(3),
+.todo-table tr.is-completed td:nth-child(4),
+.todo-table tr.is-completed td:nth-child(5){
+	color: rgb(133, 133, 133);
+	text-decoration: line-through;
+	text-decoration-color: rgb(79, 79, 79);
+}
+/*削除ボタンの表示を消す*/
+.todo-table td:nth-child(7) button{
+	border:none;
+	background:none;
+	cursor:pointer;
+}
+/*削除ボタンのホバー時*/
+.todo-table td:nth-child(7) img:hover{
+	opacity: 0.5;
+	transform: scale(1.2)
+}

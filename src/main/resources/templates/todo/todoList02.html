@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ToDoリスト02</title>
+<meta name="description" content="ToDoリストです。">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" th:href="@{/img/todo_favicon.png}">
+<link rel="stylesheet" th:href="@{/css/todo_style02.css}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="todo-container">
+	<div class="card-box">
+		<h2 class="card-header">入力フォーム</h2>
+		<div class="card-body">
+			<form th:action="@{/insert02}" method="post">
+				<div class="form-row">
+					<label>タスク名：</label>
+<!--					入力フォームの空欄エラーは「required」を追記-->
+					<input type="text" name="TASK" required>
+				</div>
+				<div class="form-row flex-row">
+					<div>
+						<label>期限日：</label>
+						<input type="date" name="DATE" required>
+					</div>
+					<div>
+						<input type="submit" value="入力" class="btn-submit">
+						<input type="reset" value="リセット" class="btn-reset">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<form method="post" class="card-box" th:action="@{/todoList02}">
+		<h2 class="card-header">変更フォーム<span>(下記選択必須)</span></h2>
+		<div class="card-body">
+			<div class="form-row">
+				<label>タスク名：</label>
+				<input type="text" name="TASK">
+			</div>
+			<div class="form-row flex-row">
+				<div>
+					<label>期限日：</label>
+					<input type="date" name="DATE">
+				</div>
+				<div>
+					<input type="submit" th:formaction="@{/update_task02}" value="タスク名変更" class="btn-submit">
+					<input type="submit" th:formaction="@{/update_date02}" value="期限日変更" class="btn-submit">
+					<input type="reset" value="リセット" class="btn-reset">
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="filter">
+					<input type="submit" value="抽出" th:formaction="@{/filter}">
+					<label>
+						<input type="radio" name="FILTER" value="期限前">
+						<span>期限前</span>
+					</label>
+					<label>
+						<input type="radio" name="FILTER" value="今日まで">
+						<span>今日まで</span>
+					</label>
+					<label>
+						<input type="radio" name="FILTER" value="オーバー">
+						<span>オーバー</span>
+					</label>
+					<label>
+						<input type="radio" name="FILTER" value="解除">
+						<span>解除</span>
+					</label>
+				</div>
+				<div class="sort">
+					<input type="submit" value="並び替え" th:formaction="@{/sort}">
+					<label>
+						<input type="radio" name="SORT" value="昇順">
+						<span>昇順</span>
+					</label>
+					<label>
+						<input type="radio" name="SORT" value="降順">
+						<span>降順</span>
+					</label>
+					<label>
+						<input type="radio" name="SORT" value="並び替え解除">
+						<span>並び替え<br>解除</span>
+					</label>
+				</div>
+			</div>
+		</div>
+		<h2 class="card-header flex-header">&#x1F4DD;ToDoリスト&#x1F4DD;</h2>
+		<div class="card-body">
+			<div class="count-display">
+				<p>抽出： <span	th:text="${filterCount == null} ? 0 : ${filterCount}"></span> 件</p>
+				<p>残りタスク <span th:text="${undoneCount}"></span> 件 / 全 <span th:text="${totalCount}"></span> 件</p>
+				<div class="export-box">
+					<p><a th:href="@{/export/csv}"><span>CSV出力</span>&#x1F4C2;</a></p>
+					<p><a th:href="@{/export/txt}"><span>TEXT出力</span>&#x1F4C2;</a></p>
+				</div>
+			</div>
+			<table class="todo-table">
+				<tr>
+					<th>選択</th><th>ID<small>(自動採番)</small></th><th>タスク</th><th>期限日</th><th> </th><th>&#x2705;</th><th> </th>
+				</tr>
+<!--				完了状態（todo.completed）が true の場合、自動で 'is-completed' クラスが付くようにする-->
+				<tr th:each="todo: ${todos}" th:classappend="${todo.completed} ? 'is-completed' : ''">
+					<td>
+						<input type="radio" name="ID" th:value="${todo.id}">
+					</td>
+<!--					Javaの String.format メソッドを直接実行し、数値の id を 0000 形式に変換-->
+					<td th:text="${T(java.lang.String).format('%04d', todo.id)}"></td>
+					<td th:text="${todo.task}"></td>
+					<td th:text="${todo.date}"></td>
+					<td>
+						<div th:if="${todo.date} gt ${today}" class="limit">期限前</div>
+						<div th:if="${todo.date} eq ${today}" class="limit limit-now" >今日まで</div>
+						<div th:unless="${todo.date} ge ${today}" class="limit limit-over">オーバー</div>
+					</td>
+					<td>
+<!--						チェックボックスは個別のボタンとして配置し、行ごとのth:formactionを持たせる-->
+<!--						パス変数によるidの引き渡し。クエリパラメータに変えてもOK。-->
+	                    <input type="submit" 
+							th:formaction="@{/update_check02/{id}(id=${todo.id})}" 
+	                        th:value="${todo.completed} ? '✓' : '　'"
+							class="btn-complete">
+					</td>
+<!--					<td th:text="${todo.completed}"></td>-->
+					<td>
+<!--						クエリパラメータによるidの引き渡し。パス変数に変えてもOK。-->
+						<button type="submit" th:formaction="@{/delete02(id=${todo.id})}" 
+					            onclick="return confirm('本当に削除しますか？')" >
+					        <img th:src="@{/img/todo_delete.png}" alt="削除" width="16">
+					    </button>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+</div>
+<!--エラーメッセージ表示-->
+<script th:if="${errorMsg}">
+    alert('[[${errorMsg}]]');
+</script>
+</body>
+</html>
